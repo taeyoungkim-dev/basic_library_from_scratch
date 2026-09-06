@@ -48,8 +48,13 @@ class Matrix
             return this->col_size;
         }
         //operator overloading
-        friend bool operator=(Matrix* left_matrix, Matrix*right_matrix);
-        Matrix operator+(Matrix*right_matrix){
+        //What's wrong?
+        friend bool operator=(Matrix right_matrix);
+        double operator()(int row, int col){
+            return this->data[row*this->col_size+col];
+        }
+
+        Matrix operator+(Matrix right_matrix){
             if(this->row_size!=right_matrix.get_row_size()){
                 throw std::out_of_range("[Error] Row size is differenet.");
             }
@@ -57,14 +62,14 @@ class Matrix
                 throw std::out_of_range("[Error] Col size is differenet.");
             }
             Matrix result_matrix(this->row_size,this->col_size);
-            int total_elements_num = this->row * this->col;
+            int total_elements_num = this->row_size * this->col_size;
             int i;
             for(i=0;i<total_elements_num;i++){
                 result_matrix.data[i] = this->data[i] + right_matrix.data[i];
             }
-            return result_matrix
+            return result_matrix;
         }
-        Matrix operator-(Matrix*right_matrix){
+        Matrix operator-(Matrix right_matrix){
             if(this->row_size!=right_matrix.get_row_size()){
                 throw std::out_of_range("[Error] Row size is differenet.");
             }
@@ -72,12 +77,12 @@ class Matrix
                 throw std::out_of_range("[Error] Col size is differenet.");
             }
             Matrix result_matrix(this->row_size,this->col_size);
-            int total_elements_num = this->row * this->col;
+            int total_elements_num = this->row_size * this->col_size;
             int i;
             for(i=0;i<total_elements_num;i++){
                 result_matrix.data[i] = this->data[i] - right_matrix.data[i];
             }
-            return result_matrix
+            return result_matrix;
         }
         Matrix operator*(Matrix*right_matrix){
         }
