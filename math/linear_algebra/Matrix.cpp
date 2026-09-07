@@ -48,9 +48,32 @@ class Matrix
             return this->col_size;
         }
         //operator overloading
-        //What's wrong?
-        friend bool operator=(Matrix right_matrix);
-        double operator()(int row, int col){
+        //TODO
+        Matrix& operator=(const Matrix& right_matrix){
+            // if left matrix is right_matrix
+            if(this == &right_matrix){
+                return *this;//for a=b=c command
+            }
+            if(this->row_size!=right_matrix.get_row_size()){
+                throw std::out_of_range("[Error] Row size is differenet.");
+            }
+            if(this->col_size!=right_matrix.get_col_size()){
+                throw std::out_of_range("[Error] Col size is differenet.");
+            }
+            int total_elements_num = this->row_size * this->col_size;
+            int i;
+            for(i=0;i<total_elements_num;i++){
+                this->data[i] = right_matrix.data[i];
+            }
+            return *this;
+        }
+        double& operator()(int row, int col){
+            if(this->row_size<=row||row<0){
+                throw std::out_of_range("[Error] Row index is out of range.");
+            }
+            if(this->col_size<=col||col<0){
+                throw std::out_of_range("[Error] Col index is out of range.");
+            }
             return this->data[row*this->col_size+col];
         }
 
@@ -84,6 +107,7 @@ class Matrix
             }
             return result_matrix;
         }
+        //TODO
         Matrix operator*(Matrix*right_matrix){
         }
 }
