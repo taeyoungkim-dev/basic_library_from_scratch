@@ -41,14 +41,23 @@ class Matrix
             return data[row*col_size+col];
         }
         */
+        //custom function
+        double dot_product(double* v1,double* v2,int size){
+            double result = 0;
+            for(int i=0;i<size;i++){
+                result += v1[i]*v2[i];
+            }
+            return result;
+        }
+
         int get_row_size(void){
             return this->row_size;
         }
         int get_col_size(void){
             return this->col_size;
         }
+
         //operator overloading
-        //TODO
         Matrix& operator=(Matrix& right_matrix){
             // if left matrix is right_matrix
             if(this == &right_matrix){
@@ -112,8 +121,22 @@ class Matrix
             if(this->col_size!=right_matrix.get_row_size()){
                 throw std::out_of_range("[Error] Matrix multiplication has a row,col problem.");
             }
-            Matrix result_matrix(this->col_size,right_matrix.get_col_size());
-            //TODO
+            int new_row_size = this->col_size;
+            int new_col_size = right_matrix.get_row_size;
+            Matrix result_matrix(new_row_size,new_col_size);
+            //My method
+            //deviding right matrix into col vector
+            doube* row_vector_pointer,col_vector_pointer;
+            for(int i=0;i<new_row_size;i++){
+                for(int j=0;j<new_col_size;j++){
+                    double* row_vector_pointer =  
+                    double* col_vector_pointer = 
+                    result_matrix(i,j) = dot_product()
+                }
+            }
+            //I considered right matrix transposing but guessed that is not a good way.
+            //TODO : Search and study how to make matrix multifly faster
+
             return result_matrix;
         }
 }
