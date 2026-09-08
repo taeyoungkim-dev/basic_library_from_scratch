@@ -49,7 +49,7 @@ class Matrix
         }
         //operator overloading
         //TODO
-        Matrix& operator=(const Matrix& right_matrix){
+        Matrix& operator=(Matrix& right_matrix){
             // if left matrix is right_matrix
             if(this == &right_matrix){
                 return *this;//for a=b=c command
@@ -77,7 +77,7 @@ class Matrix
             return this->data[row*this->col_size+col];
         }
 
-        Matrix operator+(Matrix right_matrix){
+        Matrix operator+(Matrix &right_matrix){
             if(this->row_size!=right_matrix.get_row_size()){
                 throw std::out_of_range("[Error] Row size is differenet.");
             }
@@ -92,7 +92,7 @@ class Matrix
             }
             return result_matrix;
         }
-        Matrix operator-(Matrix right_matrix){
+        Matrix operator-(Matrix &right_matrix){
             if(this->row_size!=right_matrix.get_row_size()){
                 throw std::out_of_range("[Error] Row size is differenet.");
             }
@@ -107,7 +107,13 @@ class Matrix
             }
             return result_matrix;
         }
-        //TODO
-        Matrix operator*(Matrix*right_matrix){
+
+        Matrix operator*(Matrix &right_matrix){
+            if(this->col_size!=right_matrix.get_row_size()){
+                throw std::out_of_range("[Error] Matrix multiplication has a row,col problem.");
+            }
+            Matrix result_matrix(this->col_size,right_matrix.get_col_size());
+            //TODO
+            return result_matrix;
         }
 }
