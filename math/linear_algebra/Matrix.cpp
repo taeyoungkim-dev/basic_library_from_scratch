@@ -122,11 +122,11 @@ class Matrix
                 throw std::out_of_range("[Error] Matrix multiplication has a row,col problem.");
             }
             int new_row_size = this->col_size;
-            int new_col_size = right_matrix.get_row_size;
+            int new_col_size = right_matrix.get_row_size();
             Matrix result_matrix(new_row_size,new_col_size);
             //My method
-            //deviding right matrix into col vector
-            doube* row_vector_pointer,col_vector_pointer;
+            double* row_vector_pointer;
+            double* col_vector_pointer;
             for(int i=0;i<new_row_size;i++){
                 for(int j=0;j<new_col_size;j++){
                     double* row_vector_pointer =  
