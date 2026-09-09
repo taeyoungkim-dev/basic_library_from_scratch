@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <stdexcept>
 using namespace std;
@@ -124,19 +125,33 @@ class Matrix
             int new_row_size = this->col_size;
             int new_col_size = right_matrix.get_row_size();
             Matrix result_matrix(new_row_size,new_col_size);
-            //My method
+//My method
             double* row_vector_pointer;
             double* col_vector_pointer;
-            for(int i=0;i<new_row_size;i++){
-                for(int j=0;j<new_col_size;j++){
-                    double* row_vector_pointer =  
-                    double* col_vector_pointer = 
-                    result_matrix(i,j) = dot_product()
+            //Making col_vector from right_matrix
+            int col_vecotor_num = right_matrix.get_col_size();
+            double** col_vector_array_pointer = new double*[col_vecotor_num];
+            for(int i=0;i<col_vecotor_num;i++){
+                col_vector_array_pointer[i] = new double[right_matrix.get_row_size()];
+            }
+            for(int i=0;i<right_matrix.get_row_size();i++){
+                for(int j=0;j<right_matrix.get_col_size();i++){
+                    col_vector_array_pointer[i][j] = right_matrix(j,i);
                 }
             }
-            //I considered right matrix transposing but guessed that is not a good way.
-            //TODO : Search and study how to make matrix multifly faster
 
+            for(int i=0;i<new_row_size;i++){
+                row_vector_pointer = &(this->data[i*(this->col_size)]);
+                for(int j=0;j<new_col_size;j++){
+                    col_vector_pointer = col_vector_array_pointer[j]
+                    result_matrix(i,j) = dot_product(row_vector_pointer,col_vector_pointer,new_col_size);
+                }
+            }
+            for(int i=0;i<col_vecotor_num;i++){
+                delete col_vector_array_pointer[i];
+            }
+            delete col_vector_array_pointer;
+            //TODO : Search and study how to make matrix multifly faster
             return result_matrix;
         }
 }
