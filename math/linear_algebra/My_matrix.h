@@ -71,11 +71,10 @@ class Matrix
                 throw std::out_of_range("[Error] Col size is differenet.");
             }
             int total_elements_num = this->row_size * this->col_size;
-            int i;
-            for(i=0;i<total_elements_num;i++){
+            for(int i=0;i<total_elements_num;i++){
                 this->data[i] = right_matrix.data[i];
             }
-            return *this;
+            return *this;//for a=b=c command
         }
         double& operator()(int row, int col){
             if(this->row_size<=row||row<0){
@@ -122,36 +121,37 @@ class Matrix
             if(this->col_size!=right_matrix.get_row_size()){
                 throw std::out_of_range("[Error] Matrix multiplication has a row,col problem.");
             }
-            int new_row_size = this->col_size;
-            int new_col_size = right_matrix.get_row_size();
+            int new_row_size = this->row_size;
+            int new_col_size = right_matrix.get_col_size();
             Matrix result_matrix(new_row_size,new_col_size);
 //My method
             double* row_vector_pointer;
             double* col_vector_pointer;
             //Making col_vector from right_matrix
-            int col_vecotor_num = right_matrix.get_col_size();
-            double** col_vector_array_pointer = new double*[col_vecotor_num];
-            for(int i=0;i<col_vecotor_num;i++){
+            int col_vecotor_num = right_matrix.get_col_size();//right matrix를 분리해서 만들 vector의 갯수. 세로 벡터는 col 갯수만큼이 있음.
+            double** col_vector_array_pointer = new double*[col_vecotor_num];//vector들을 순서대로 관리할 array
+            for(int i=0;i<col_vecotor_num;i++){//array에 vector 크기만큼의 array 배치
                 col_vector_array_pointer[i] = new double[right_matrix.get_row_size()];
             }
+            //완성된 빈 vector들에게 값을 복사. 어차피 대칭이니까 하나씩 거꾸로 옮기기.
             for(int i=0;i<right_matrix.get_row_size();i++){
-                for(int j=0;j<right_matrix.get_col_size();i++){
-                    col_vector_array_pointer[i][j] = right_matrix(j,i);
+                for(int j=0;j<right_matrix.get_col_size();j++){
+                    col_vector_array_pointer[j][i] = right_matrix(i,j);
                 }
             }
 
             for(int i=0;i<new_row_size;i++){
                 row_vector_pointer = &(this->data[i*(this->col_size)]);
                 for(int j=0;j<new_col_size;j++){
-                    col_vector_pointer = col_vector_array_pointer[j]
-                    result_matrix(i,j) = dot_product(row_vector_pointer,col_vector_pointer,new_col_size);
+                    col_vector_pointer = col_vector_array_pointer[j];
+                    result_matrix(i,j) = dot_product(row_vector_pointer,col_vector_pointer,this->col_size);
                 }
             }
             for(int i=0;i<col_vecotor_num;i++){
-                delete col_vector_array_pointer[i];
+                delete[] col_vector_array_pointer[i];
             }
-            delete col_vector_array_pointer;
+            delete[] col_vector_array_pointer;
             //TODO : Search and study how to make matrix multifly faster
             return result_matrix;
         }
-}
+};
