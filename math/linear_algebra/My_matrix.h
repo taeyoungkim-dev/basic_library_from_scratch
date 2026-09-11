@@ -12,6 +12,11 @@ class Matrix
     public:
         Matrix(int row_size,int col_size)
             : row_size(row_size), col_size(col_size) {
+            if (row_size <= 0 || col_size <= 0) {
+                throw std::invalid_argument(
+                    "[Error] Matrix row and column sizes must be greater than zero."
+                );
+            }
             data = new double[row_size*col_size];
         }
 
@@ -155,3 +160,100 @@ class Matrix
             return result_matrix;
         }
 };
+
+//A^t
+Matrix transpose_matrix(Matrix& matrix){
+    int result_row = matrix.get_col_size();
+    int result_col = matrix.get_row_size();
+
+    Matrix result_matrix(result_row,result_col);
+    for(int i=0;i<result_row;i++){
+        for(int j=0;j<result_col;j++){
+            result_matrix(j,i) = matrix(i,j);
+        }
+    }
+    return result_matrix;
+}
+
+//Minor is a matrix which is removed one row and one col
+Matrix get_minor(Matrix& matrix,int removed_row, int removed_col){
+    int result_row = matrix.get_row_size()-1;
+    int result_col = matrix.get_col_size()-1;
+
+    if(result_row==0 || result_col==0){
+        throw std::invalid_argument(
+            "[Error] Cannot create a minor matrix from a matrix with dimension 1.");
+    }
+
+    Matrix result_matrix(result_row,result_col);
+
+    int r_m_row_index = 0;
+
+    for(int i=0;i<result_row+1;i++){
+        if(i==removed_row) continue;
+        int r_m_col_index = 0;
+        for(int j=0;j<result_col+1;j++){
+            if(j==removed_col) continue;
+            result_matrix(r_m_row_index,r_m_col_index) = matrix(i,j);
+            r_m_col_index += 1;
+        }
+        r_m_row_index += 1;
+    }
+    return result_matrix;
+}
+
+//det(A) == sigma(from j==1 to n){(-1)^(i+j)*a_ij*det(M_ij)}
+//TODO : Input should be (const Matrix &) because of problem line
+//So Should edit Matrix class
+//TODO : Do not use recursive function
+double determinant(Matrix matrix){
+    int matrix_row_size = matrix.get_row_size();
+    int matrix_col_size = matrix.get_col_size();
+
+    if(matrix_row_size!=matrix_col_size){
+        throw std::invalid_argument(
+            "[Error] Matrix is not a square matrix."
+        );
+    }
+
+    if(matrix_row_size==1)return matrix(0,0);
+
+    //ad-bc
+    if(matrix_row_size==2){
+        return matrix(0,0)*matrix(1,1) - matrix(0,1)*matrix(1,0);
+    }
+
+    //Laplace expansion
+    //TODO : Optimization by gaussian elimination
+    double result = 0;
+    for(int j=0;j<matrix_col_size;j++){
+        //Fixed i = 0
+        //Very bad method
+        int i=0;
+        double sign = 1;
+        if(((i+1)+(j+1))&1) sign = -1;
+        //TODO : Problem line
+        result += sign * matrix(i,j)*determinant(get_minor(matrix,i,j));
+    }
+    return result;
+}
+
+
+bool is_invertible_matrix(Matrix& matrix){
+    //if not square matrix
+    if(matrix.get_row_size()!=matrix.get_col_size()){
+        return false;
+    }
+
+
+}
+
+
+Matrix inverse_matrix(Matrix& matrix){
+
+}
+
+//Making square matrix from nonsquare matrix
+Matrix intuive_matrix(Matrix& matrix){
+
+}
